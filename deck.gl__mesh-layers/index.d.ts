@@ -51,6 +51,7 @@ declare module "@deck.gl/mesh-layers/simple-mesh-layer/simple-mesh-layer" {
 	import Texture2D from "@luma.gl/webgl/classes/texture-2d";
 	import { RGBAColor } from "@deck.gl/core/utils/color";
 	import { Position3D } from "@deck.gl/core/utils/positions";
+	import { EulerAngles } from "@deck.gl/core/utils/orientation";
 	export interface SimpleMesh {
 		positions: Float32Array;
 		normals: Float32Array;
@@ -58,29 +59,21 @@ declare module "@deck.gl/mesh-layers/simple-mesh-layer/simple-mesh-layer" {
 	}
 	export interface SimpleMeshLayerProps<D> extends LayerProps<D> {
 		mesh: SimpleMesh;
+		_instanced?: boolean;
 		texture?: Texture2D | HTMLImageElement | string;
 		sizeScale?: number;
 		wireframe?: boolean;
 		material?: any;
-		getPosition?: (d: D) => Position3D;
+		getPosition?: ((d: D) => Position3D) | Position3D;
 		getColor?: ((d: D) => RGBAColor) | RGBAColor;
-		getOrientation?: ((d: D) => Coordinates) | Position3D;
-		getScale?: ((d: D) => Position3D) | Position3D;
-		getTranslation?: ((d: D) => Position3D) | Position3D;
+		getOrientation?: ((d: D) => EulerAngles) | EulerAngles;
+		getScale?: ((d: D) => [number, number, number]) | [number, number, number]; // Scaling factor on the mesh along each axis.
+		getTranslation?: ((d: D) => [number, number, number]) | [number, number, number]; // Translation of the mesh along each axis. Offset from the center position given by getPosition. [x, y, z] in meters.
 		getTransformMatrix?: ((d: D) => number[][]) | number[][];
 	}
 	export default class SimpleMeshLayer<D,P extends SimpleMeshLayerProps<D> = SimpleMeshLayerProps<D>> extends Layer<D,P> {
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		finalizeState(): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		getModel(mesh: any): any;
@@ -104,6 +97,7 @@ declare module "@deck.gl/mesh-layers/scenegraph-layer/scenegraph-layer" {
 	import { ScenegraphNode } from "@luma.gl/experimental";
 	import { RGBAColor } from "@deck.gl/core/utils/color";
 	import { Position3D } from "@deck.gl/core/utils/positions";
+	import { EulerAngles } from "@deck.gl/core/utils/orientation";
 	export interface ScenegraphLayerProps<D> extends LayerProps<D> {
 		//Mesh
 		scenegraph: URL | ScenegraphNode | Promise<ScenegraphNode>;
@@ -118,10 +112,10 @@ declare module "@deck.gl/mesh-layers/scenegraph-layer/scenegraph-layer" {
 		//Data Accessors
 		getPosition?: (d: D) => Position3D;
 		getColor?: ((d: D) => RGBAColor) | RGBAColor;
-		getOrientation?: ((d: D) => Coordinates) | Coordinates;
-		getScale?: ((d: D) => Coordinates) | Coordinates;
-		getTranslation?: ((d: D) => Coordinates) | Coordinates;
-		getTransformMatrix?: ((d: D) => number[][]) | number[][];
+		getOrientation?: ((d: D) => EulerAngles) | EulerAngles;
+		getScale?: ((d: D) => [number, number, number]) | [number, number, number]; // Scaling factor on the mesh along each axis.
+		getTranslation?: ((d: D) => [number, number, number]) | [number, number, number]; // Translation of the mesh along each axis. Offset from the center position given by getPosition. [x, y, z] in meters.
+		getTransformMatrix?: ((d: D) => number[][]) | number[][]; // 4x4 column-major model matrix
 		sizeMinPixels?: number;
 		sizeMaxPixels?: number;
  
@@ -131,7 +125,6 @@ declare module "@deck.gl/mesh-layers/scenegraph-layer/scenegraph-layer" {
 	export default class ScenegraphLayer <D,P extends ScenegraphLayerProps<D> = ScenegraphLayerProps<D>> extends Layer<D,P> {
 		constructor(props: ScenegraphLayerProps<D>);
 		initializeState(params: any): void;
-		updateState(params: any): void;
 		finalizeState(): void;
 		_updateScenegraph(props: any): void;
 		_applyAllAttributes(scenegraph: any): void;

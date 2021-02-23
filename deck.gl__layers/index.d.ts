@@ -30,15 +30,6 @@ declare module "@deck.gl/layers/arc-layer/arc-layer" {
 	export default class ArcLayer<D, P extends ArcLayerProps<D> = ArcLayerProps<D>> extends Layer<D, P> {
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		_getModel(gl: any): any;
 	}
@@ -66,25 +57,19 @@ declare module "@deck.gl/layers/bitmap-layer/bitmap-layer" {
 			[number, number],
 			[number, number]
 		];
+		loadOptions?: any;
+		textureParameters?: any;
+		_imageCoordinateSystem?: number;
 
 		//Render Options
-		desaturate: number;
-		transparentColor: RGBAColor;
-		tintColor: [number, number, number];
+		desaturate?: number;   // default: 0
+		transparentColor?: RGBAColor;  // default: [0, 0, 0, 0]
+		tintColor?: [number, number, number];   // RGBColor, default: [255, 255, 255]
 	}
 	export default class BitmapLayer<D, P extends BitmapLayerProps<D> = BitmapLayerProps<D>> extends Layer<D, P> {
 		constructor(props: BitmapLayerProps<D>);
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		finalizeState(): void;
 		calculatePositions(attributes: any): void;
 		_getModel(gl: any): any;
@@ -234,15 +219,6 @@ declare module "@deck.gl/layers/icon-layer/icon-layer" {
 		constructor(props: P);
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			oldProps,
-			props,
-			changeFlags,
-		}: {
-			oldProps: P;
-			props: P;
-			changeFlags: any;
-		}): void;
 		get isLoaded(): any;
 		finalizeState(): void;
 		draw({ uniforms }: { uniforms: any }): void;
@@ -281,15 +257,6 @@ declare module "@deck.gl/layers/line-layer/line-layer" {
 	export default class LineLayer<D, P extends LineLayerProps<D> = LineLayerProps<D>> extends Layer<D, P> {
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		_getModel(gl: any): any;
 	}
@@ -318,15 +285,6 @@ declare module "@deck.gl/layers/point-cloud-layer/point-cloud-layer" {
 	export default class PointCloudLayer<D, P extends PointCloudLayerProps<D> = PointCloudLayerProps<D>> extends Layer<D, P> {
 		getShaders(id: any): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		_getModel(gl: any): any;
 	}
@@ -367,15 +325,6 @@ declare module "@deck.gl/layers/scatterplot-layer/scatterplot-layer" {
 	export default class ScatterplotLayer<D, P extends ScatterplotLayerProps<D> = ScatterplotLayerProps<D>> extends Layer<D, P> {
 		getShaders(id: any): any;
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		_getModel(gl: any): any;
 	}
@@ -430,15 +379,6 @@ declare module "@deck.gl/layers/column-layer/column-layer" {
 		 * Essentially a deferred constructor
 		 */
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: P;
-			oldProps: P;
-			changeFlags: any;
-		}): void;
 		getGeometry(diskResolution: any, vertices: any): ColumnGeometry;
 		_getModel(gl: any): any;
 		_updateGeometry({
@@ -530,16 +470,6 @@ declare module "@deck.gl/layers/path-layer/path-layer" {
 	export default class PathLayer<D, P extends PathLayerProps<D> = PathLayerProps<D>> extends Layer<D, P> {
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState({
-			oldProps,
-			props,
-			changeFlags,
-		}: {
-			oldProps: P;
-			props: P;
-			changeFlags: any;
-		}): void;
-		getPickingInfo(params: any): any;
 		draw({ uniforms }: { uniforms: any }): void;
 		_getModel(gl: any): any;
 		calculatePositions(attribute: any): void;
@@ -665,7 +595,6 @@ declare module "@deck.gl/layers/solid-polygon-layer/solid-polygon-layer" {
 		initializeState(params: any): void;
 		getPickingInfo(params: any): any;
 		draw({ uniforms }: { uniforms: any }): void;
-		updateState(updateParams: any): void;
 		updateGeometry({
 			props,
 			oldProps,
@@ -734,15 +663,6 @@ declare module "@deck.gl/layers/polygon-layer/polygon-layer" {
 	export default class PolygonLayer<D, P extends PolygonLayerProps<D> = PolygonLayerProps<D>> extends CompositeLayer<D, P> {
 		constructor(props: PolygonLayerProps<D>);
 		initializeState(params: any): void;
-		updateState({
-			oldProps,
-			props,
-			changeFlags,
-		}: {
-			oldProps: PolygonLayerProps<D>;
-			props: PolygonLayerProps<D>;
-			changeFlags: any;
-		}): void;
 		_getPaths(dataRange?: {}): any[];
 		renderLayers(): any[];
 	}
@@ -807,7 +727,6 @@ declare module "@deck.gl/layers/geojson-layer/geojson-layer" {
 	export default class GeoJsonLayer<D, P extends GeoJsonLayerProps<D> = GeoJsonLayerProps<D>> extends CompositeLayer<D, P> {
 		constructor(props: GeoJsonLayerProps<D>);
 		initializeState(params: any): void;
-		updateState({ props, changeFlags }: { props: any; changeFlags: any }): void;
 		renderLayers(): any[];
 		_getHighlightedIndex(data: any): any;
 	}
@@ -821,7 +740,6 @@ declare module "@deck.gl/layers/text-layer/multi-icon-layer/multi-icon-layer" {
 	export default class MultiIconLayer<D> extends IconLayer<D> {
 		getShaders(): any;
 		initializeState(params: any): void;
-		updateState(updateParams: any): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		getInstanceOffset(icons: any): any[];
 		getInstanceColorMode(icons: any): number;
@@ -1027,15 +945,6 @@ declare module "@deck.gl/layers/text-layer/text-layer" {
 	export default class TextLayer<D, P extends TextLayerProps<D> = TextLayerProps<D>> extends CompositeLayer<D, P> {
 		constructor(props: TextLayerProps<D>);
 		initializeState(params: any): void;
-		updateState({
-			props,
-			oldProps,
-			changeFlags,
-		}: {
-			props: TextLayerProps<D>;
-			oldProps: TextLayerProps<D>;
-			changeFlags: any;
-		}): void;
 		finalizeState(): void;
 		getPickingInfo({ info }: { info: any }): any;
 		_updateFontAtlas(oldProps: any, props: any): void;

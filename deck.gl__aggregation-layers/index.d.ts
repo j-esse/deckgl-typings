@@ -9,7 +9,6 @@ declare module "@deck.gl/aggregation-layers/aggregation-layer" {
 	export default class AggregationLayer<D, P extends AggregationLayerProps<D> = AggregationLayerProps<D>> extends CompositeLayer<D, P> {
 		constructor(props: AggregationLayerProps<D>);
 		initializeState(dimensions: any): void;
-		updateState(opts: any): void;
 		updateAttributes(changedAttributes: any): void;
 		getAttributes(): any;
 		getModuleSettings(): any;
@@ -309,7 +308,6 @@ declare module "@deck.gl/aggregation-layers/grid-aggregation-layer" {
 	export default class GridAggregationLayer<D, P extends GridAggregationLayerProps<D> = GridAggregationLayerProps<D>> extends AggregationLayer<D, P> {
 		constructor(props: GridAggregationLayerProps<D>);
 		initializeState({ dimensions }: { dimensions: any }): void;
-		updateState(opts: any): void;
 		finalizeState(): void;
 		updateShaders(shaders: any): void;
 		updateAggregationState(opts: any): void;
@@ -359,15 +357,6 @@ declare module "@deck.gl/aggregation-layers/screen-grid-layer/screen-grid-cell-l
 		};
 		initializeState(params: any): void;
 		shouldUpdateState({ changeFlags }: { changeFlags: any }): any;
-		updateState({
-			oldProps,
-			props,
-			changeFlags,
-		}: {
-			oldProps: ScreenGridCellLayerProps<D>;
-			props: ScreenGridCellLayerProps<D>;
-			changeFlags: any;
-		}): void;
 		draw({ uniforms }: { uniforms: any }): void;
 		calculateInstancePositions(
 			attribute: any,
@@ -930,15 +919,6 @@ declare module "@deck.gl/aggregation-layers/grid-layer/grid-layer" {
 	export default class GridLayer<D, P extends GridLayerProps<D> = GridLayerProps<D>> extends CompositeLayer<D, P> {
 		constructor(props: GridLayerProps<D>);
 		initializeState(params: any): void;
-		updateState({
-			oldProps,
-			props,
-			changeFlags,
-		}: {
-			oldProps: any;
-			props: any;
-			changeFlags: any;
-		}): void;
 		renderLayers(): any;
 		canUseGPUAggregation(props: any): boolean;
 	}
@@ -1019,8 +999,6 @@ declare module "@deck.gl/aggregation-layers/heatmap-layer/heatmap-layer" {
 	export default class HeatmapLayer<D, P extends HeatmapLayerProps<D> = HeatmapLayerProps<D>> extends AggregationLayer<D, P> {
 		constructor(props: HeatmapLayerProps<D>);
 		initializeState(params: any): void;
-		shouldUpdateState({ changeFlags }: { changeFlags: any }): any;
-		updateState(opts: any): void;
 		renderLayers(): any;
 		finalizeState(): void;
 		_getAttributeManager(): any;
